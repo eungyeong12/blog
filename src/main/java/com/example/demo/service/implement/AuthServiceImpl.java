@@ -1,0 +1,48 @@
+package com.example.demo.service.implement;
+
+import com.example.demo.domain.User;
+import com.example.demo.dto.request.auth.SignUpRequestDto;
+import com.example.demo.dto.response.ResponseDto;
+import com.example.demo.dto.response.auth.SignUpResponseDto;
+import com.example.demo.repository.UserReporitory;
+import com.example.demo.service.AuthService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class AuthServiceImpl implements AuthService {
+
+    private final UserReporitory userReporitory;
+
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    @Override
+    public ResponseEntity<? super SignUpResponseDto> signUp(SignUpRequestDto dto) {
+        try {
+            String email = dto.getEmail();
+            boolean existedEmail = userReporitory.existsByEmail(email);
+            if(existedEmail) return SignUpResponseDto.duplicateEmail();
+
+            String nickname = dto.getNickname();
+            boolean existedNickname = userReporitory.existsByNickname(nickname);
+            if(existedNickname) return SignUpResponseDto.duplicateNickname();
+
+            String password = dto.getPassword();
+            String encodedPassword = passwordEncoder.encode(password);
+            dto.setPassword(encodedPassword);
+
+            User user = new User(dto);
+            userReporitory.save(user);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return SignUpResponseDto.success();
+    }
+}
