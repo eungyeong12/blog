@@ -1,9 +1,12 @@
 package com.example.demo.service.implement;
 
 import com.example.demo.domain.User;
+import com.example.demo.dto.request.auth.SignInRequestDto;
 import com.example.demo.dto.request.auth.SignUpRequestDto;
 import com.example.demo.dto.response.ResponseDto;
+import com.example.demo.dto.response.auth.SignInResponseDto;
 import com.example.demo.dto.response.auth.SignUpResponseDto;
+import com.example.demo.provider.JwtProvider;
 import com.example.demo.repository.UserReporitory;
 import com.example.demo.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
     private final UserReporitory userReporitory;
+    private final JwtProvider jwtProvider;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -44,5 +48,30 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return SignUpResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super SignInResponseDto> signIn(SignInRequestDto dto) {
+        String token = null;
+
+        try {
+
+            String email = dto.getEmail();
+            User user = userReporitory.findByEmail(email);
+            if(user == null) return SignInResponseDto.signInFailed();
+
+            String password = dto.getPassword();
+            String encodePassword = user.getPassword();
+            boolean isMatched = passwordEncoder.matches(password, encodePassword);
+            if(!isMatched) return SignInResponseDto.signInFailed();
+
+            token = jwtProvider.create(email);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return SignInResponseDto.success(token);
     }
 }

@@ -1,6 +1,8 @@
 package com.example.demo.api;
 
+import com.example.demo.dto.request.auth.SignInRequestDto;
 import com.example.demo.dto.request.auth.SignUpRequestDto;
+import com.example.demo.dto.response.auth.SignInResponseDto;
 import com.example.demo.dto.response.auth.SignUpResponseDto;
 import com.example.demo.service.AuthService;
 import jakarta.validation.Valid;
@@ -23,6 +25,14 @@ public class AuthApiController {
             @RequestBody @Valid SignUpRequestDto requestBody
     ) {
         ResponseEntity<? super SignUpResponseDto> response = authService.signUp(requestBody);
+        return response;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<? super SignInResponseDto> signIn(
+            @RequestBody @Valid SignInRequestDto requestBody
+            ) {
+        ResponseEntity<? super SignInResponseDto> response = authService.signIn(requestBody);
         return response;
     }
 }
