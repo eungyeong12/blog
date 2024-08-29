@@ -23,6 +23,8 @@ public class User {
 
     private String password;
 
+    private String profileImage;
+
     public User(SignUpRequestDto dto) {
         this.email = dto.getEmail();
         this.nickname = dto.getNickname();
