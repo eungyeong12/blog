@@ -20,4 +20,9 @@ public class Image {
 
     private String image;
 
+    public Image(long boardId, String image) {
+        this.board_id = boardId;
+        this.image = image;
+    }
+
 }
