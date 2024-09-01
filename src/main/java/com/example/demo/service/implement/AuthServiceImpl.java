@@ -7,7 +7,7 @@ import com.example.demo.dto.response.ResponseDto;
 import com.example.demo.dto.response.auth.SignInResponseDto;
 import com.example.demo.dto.response.auth.SignUpResponseDto;
 import com.example.demo.provider.JwtProvider;
-import com.example.demo.repository.UserReporitory;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-    private final UserReporitory userReporitory;
+    private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -28,11 +28,11 @@ public class AuthServiceImpl implements AuthService {
     public ResponseEntity<? super SignUpResponseDto> signUp(SignUpRequestDto dto) {
         try {
             String email = dto.getEmail();
-            boolean existedEmail = userReporitory.existsByEmail(email);
+            boolean existedEmail = userRepository.existsByEmail(email);
             if(existedEmail) return SignUpResponseDto.duplicateEmail();
 
             String nickname = dto.getNickname();
-            boolean existedNickname = userReporitory.existsByNickname(nickname);
+            boolean existedNickname = userRepository.existsByNickname(nickname);
             if(existedNickname) return SignUpResponseDto.duplicateNickname();
 
             String password = dto.getPassword();
@@ -40,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
             dto.setPassword(encodedPassword);
 
             User user = new User(dto);
-            userReporitory.save(user);
+            userRepository.save(user);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
         try {
 
             String email = dto.getEmail();
-            User user = userReporitory.findByEmail(email);
+            User user = userRepository.findByEmail(email);
             if(user == null) return SignInResponseDto.signInFailed();
 
             String password = dto.getPassword();

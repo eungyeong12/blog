@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class BoardListView {
     @Id
-    private Long board_id;
+    private Long id;
 
     private String title;
 

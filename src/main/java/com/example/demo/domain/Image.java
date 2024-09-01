@@ -16,12 +16,12 @@ public class Image {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private Long board_id;
+    private Long boardId;
 
     private String image;
 
     public Image(long boardId, String image) {
-        this.board_id = boardId;
+        this.boardId = boardId;
         this.image = image;
     }
 
