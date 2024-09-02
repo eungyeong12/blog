@@ -49,7 +49,7 @@ public class SecurityConfig {
                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(request -> request
-                    .requestMatchers("/", "/api/users/**", "/api/search/**", "/file/**").permitAll()
+                    .requestMatchers("/", "/api/users/**", "/api/search/**", "/file/**", "/swagger-ui/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/board/**", "/api/user/*").permitAll()
                     .anyRequest().authenticated()
             )

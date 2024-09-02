@@ -18,7 +18,8 @@ import java.util.Date;
 @AllArgsConstructor
 @Entity
 public class Board {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
@@ -51,5 +52,13 @@ public class Board {
 
     public void increaseViewCount() {
         this.viewCount++;
+    }
+
+    public void increaseFavoriteCount() {
+        this.favoriteCount++;
+    }
+
+    public void decreaseFavoriteCount() {
+        this.favoriteCount--;
     }
 }

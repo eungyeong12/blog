@@ -5,6 +5,7 @@ import com.example.demo.dto.request.auth.SignUpRequestDto;
 import com.example.demo.dto.response.auth.SignInResponseDto;
 import com.example.demo.dto.response.auth.SignUpResponseDto;
 import com.example.demo.service.AuthService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

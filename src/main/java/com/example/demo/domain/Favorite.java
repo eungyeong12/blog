@@ -16,5 +16,5 @@ public class Favorite {
     private String userEmail;
 
     @Id
-    private Long board_id;
+    private Long boardId;
 }

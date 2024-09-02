@@ -11,6 +11,7 @@ import java.util.Optional;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
+    boolean existsById(Long boardId);
     Optional<Board> findById(Long boardId);
 
     @Query(
@@ -26,7 +27,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                             "FROM board AS B " +
                             "INNER JOIN users AS U " +
                             "ON B.writer_email = U.email " +
-                            "WHERE id = ?1 ",
+                            "WHERE B.id = ?1 ",
             nativeQuery = true
     )
     GetBoardResultSet getBoard(Long boardId);
