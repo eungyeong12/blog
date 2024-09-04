@@ -2,6 +2,7 @@ package com.example.demo.api;
 
 import com.example.demo.dto.request.board.PostBoardRequestDto;
 import com.example.demo.dto.response.board.GetBoardResponseDto;
+import com.example.demo.dto.response.board.GetFavoriteListResponseDto;
 import com.example.demo.dto.response.board.PostBoardResponseDto;
 import com.example.demo.dto.response.board.PutFavoriteResponseDto;
 import com.example.demo.service.BoardService;
@@ -23,6 +24,14 @@ public class BoardApiController {
             @PathVariable("id") Long boardId
     ) {
         ResponseEntity<? super GetBoardResponseDto> response = boardService.getBoard(boardId);
+        return response;
+    }
+
+    @GetMapping("/{boardId}/favorite-list")
+    public ResponseEntity<? super GetFavoriteListResponseDto> getFavoriteList(
+            @PathVariable("boardId") Long boardId
+    ) {
+        ResponseEntity<? super GetFavoriteListResponseDto> response = boardService.getFavoriteList(boardId);
         return response;
     }
 
