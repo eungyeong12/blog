@@ -1,4 +1,5 @@
-package com.example.demo.dto.user;
+package com.example.demo.dto.response.user;
+
 
 import com.example.demo.common.ResponseCode;
 import com.example.demo.common.ResponseMessage;
@@ -9,26 +10,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @Getter
-public class GetSignInUserResponseDto extends ResponseDto {
+public class GetUserResponseDto extends ResponseDto {
 
     private String email;
     private String nickname;
     private String profileImage;
 
-    private GetSignInUserResponseDto(User user) {
+    private GetUserResponseDto(User user) {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
         this.email = user.getEmail();
         this.nickname = user.getNickname();
         this.profileImage = user.getProfileImage();
     }
 
-    public static ResponseEntity<GetSignInUserResponseDto> success(User user) {
-        GetSignInUserResponseDto result = new GetSignInUserResponseDto(user);
+    public static ResponseEntity<GetUserResponseDto> success(User user) {
+        GetUserResponseDto result = new GetUserResponseDto(user);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    public static ResponseEntity<ResponseDto> notExistUser() {
+    public static ResponseEntity<ResponseDto> noExistUser() {
         ResponseDto result = new ResponseDto(ResponseCode.NOT_EXISTED_USER, ResponseMessage.NOT_EXISTED_USER);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
     }
 }

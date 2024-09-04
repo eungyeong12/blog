@@ -1,3 +1,5 @@
+
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -17,4 +19,6 @@ logging:
     org.hibernate.sql: debug
 
 file.path: C:\Users\joeun\fileUpload\
-file.url: http://localhost:8080/file/
+file.url: http://localhost:8081/file/
+server:
+  port: 8081
