@@ -1,18 +1,15 @@
 package com.example.demo.service.implement;
 
+import com.example.demo.common.ResponseCode;
 import com.example.demo.domain.Board;
+import com.example.demo.domain.Comment;
 import com.example.demo.domain.Favorite;
 import com.example.demo.domain.Image;
 import com.example.demo.dto.request.board.PostBoardRequestDto;
+import com.example.demo.dto.request.board.PostCommentRequestDto;
 import com.example.demo.dto.response.ResponseDto;
-import com.example.demo.dto.response.board.GetBoardResponseDto;
-import com.example.demo.dto.response.board.GetFavoriteListResponseDto;
-import com.example.demo.dto.response.board.PostBoardResponseDto;
-import com.example.demo.dto.response.board.PutFavoriteResponseDto;
-import com.example.demo.repository.BoardRepository;
-import com.example.demo.repository.FavoriteRepository;
-import com.example.demo.repository.ImageRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.dto.response.board.*;
+import com.example.demo.repository.*;
 import com.example.demo.repository.resultSet.GetBoardResultSet;
 import com.example.demo.repository.resultSet.GetFavoriteListResultSet;
 import com.example.demo.service.BoardService;
@@ -32,6 +29,7 @@ public class BoardServiceImpl implements BoardService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final ImageRepository imageRepository;
+    private final CommentRepository commentRepository;
     private final FavoriteRepository favoriteRepository;
 
     @Override
@@ -109,6 +107,32 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return PostBoardResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super PostCommentResponseDto> postComment(PostCommentRequestDto dto, Long boardId, String email) {
+
+        try {
+
+            Optional<Board> optionalBoard = boardRepository.findById(boardId);
+            Board board = optionalBoard.get();
+            if(board == null) return PostCommentResponseDto.noExistBoard();
+
+            boolean existedUser = userRepository.existsByEmail(email);
+            if(!existedUser) return PostCommentResponseDto.noExistUser();
+
+            Comment comment = new Comment(dto, boardId, email);
+            commentRepository.save(comment);
+
+            board.increaseCommentCount();
+            boardRepository.save(board);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return PostCommentResponseDto.success();
     }
 
     @Override

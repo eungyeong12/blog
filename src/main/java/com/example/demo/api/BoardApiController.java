@@ -1,10 +1,8 @@
 package com.example.demo.api;
 
 import com.example.demo.dto.request.board.PostBoardRequestDto;
-import com.example.demo.dto.response.board.GetBoardResponseDto;
-import com.example.demo.dto.response.board.GetFavoriteListResponseDto;
-import com.example.demo.dto.response.board.PostBoardResponseDto;
-import com.example.demo.dto.response.board.PutFavoriteResponseDto;
+import com.example.demo.dto.request.board.PostCommentRequestDto;
+import com.example.demo.dto.response.board.*;
 import com.example.demo.service.BoardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +39,16 @@ public class BoardApiController {
             @AuthenticationPrincipal String email
             ) {
         ResponseEntity<? super PostBoardResponseDto> response = boardService.postBoard(requestBody, email);
+        return response;
+    }
+
+    @PostMapping("/{boardId}/comment")
+    public ResponseEntity<? super PostCommentResponseDto> postComment(
+            @RequestBody @Valid PostCommentRequestDto requestBody,
+            @PathVariable("boardId") Long boardId,
+            @AuthenticationPrincipal String email
+            ) {
+        ResponseEntity<? super PostCommentResponseDto> response = boardService.postComment(requestBody, boardId, email);
         return response;
     }
 
