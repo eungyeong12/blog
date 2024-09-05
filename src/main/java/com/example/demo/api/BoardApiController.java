@@ -33,11 +33,19 @@ public class BoardApiController {
         return response;
     }
 
+    @GetMapping("/{boardId}/comment-list")
+    public ResponseEntity<? super GetCommentListResponseDto> getComentList(
+            @PathVariable("boardId") Long boardId
+    ) {
+        ResponseEntity<? super GetCommentListResponseDto> response = boardService.getCommentList(boardId);
+        return response;
+    }
+
     @PostMapping("")
     public ResponseEntity<? super PostBoardResponseDto> postBoard(
             @RequestBody @Valid PostBoardRequestDto requestBody,
             @AuthenticationPrincipal String email
-            ) {
+    ) {
         ResponseEntity<? super PostBoardResponseDto> response = boardService.postBoard(requestBody, email);
         return response;
     }
