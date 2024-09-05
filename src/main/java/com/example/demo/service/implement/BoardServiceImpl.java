@@ -5,6 +5,7 @@ import com.example.demo.domain.Board;
 import com.example.demo.domain.Comment;
 import com.example.demo.domain.Favorite;
 import com.example.demo.domain.Image;
+import com.example.demo.dto.request.board.PatchBoardRequestDto;
 import com.example.demo.dto.request.board.PostBoardRequestDto;
 import com.example.demo.dto.request.board.PostCommentRequestDto;
 import com.example.demo.dto.response.ResponseDto;
@@ -155,6 +156,43 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return PostCommentResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super PatchBoardResponseDto> patchBoard(PatchBoardRequestDto dto, Long boardId, String email) {
+
+        try {
+
+            Optional<Board> optionalBoard = boardRepository.findById(boardId);
+            Board board = optionalBoard.get();
+            if(board == null) return PatchBoardResponseDto.noExistBoard();
+
+            boolean existedUser = userRepository.existsByEmail(email);
+            if(!existedUser) return PatchBoardResponseDto.noExistUser();
+
+            String writerEmail = board.getWriterEmail();
+            boolean isWriter = writerEmail.equals(email);
+            if(!isWriter) return PatchBoardResponseDto.noPermission();
+
+            board.patchBoard(dto);
+            boardRepository.save(board);
+
+            imageRepository.deleteByBoardId(boardId);
+            List<String> boardImageList = dto.getBoardImageList();
+            List<Image> images = new ArrayList<>();
+            for(String image : boardImageList) {
+                Image imageEntity = new Image(boardId, image);
+                images.add(imageEntity);
+            }
+
+            imageRepository.saveAll(images);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return PatchBoardResponseDto.success();
     }
 
     @Override

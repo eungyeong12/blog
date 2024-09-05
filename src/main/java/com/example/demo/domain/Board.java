@@ -1,5 +1,6 @@
 package com.example.demo.domain;
 
+import com.example.demo.dto.request.board.PatchBoardRequestDto;
 import com.example.demo.dto.request.board.PostBoardRequestDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -62,5 +63,10 @@ public class Board {
 
     public void decreaseFavoriteCount() {
         this.favoriteCount--;
+    }
+
+    public void patchBoard(PatchBoardRequestDto dto) {
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
     }
 }

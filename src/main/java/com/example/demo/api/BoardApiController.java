@@ -1,5 +1,6 @@
 package com.example.demo.api;
 
+import com.example.demo.dto.request.board.PatchBoardRequestDto;
 import com.example.demo.dto.request.board.PostBoardRequestDto;
 import com.example.demo.dto.request.board.PostCommentRequestDto;
 import com.example.demo.dto.response.board.*;
@@ -66,6 +67,16 @@ public class BoardApiController {
             @AuthenticationPrincipal String email
     ) {
         ResponseEntity<? super PutFavoriteResponseDto> response = boardService.putFavorite(boardId, email);
+        return response;
+    }
+
+    @PatchMapping("/{boardId}")
+    public ResponseEntity<? super PatchBoardResponseDto> patchBoard(
+            @RequestBody @Valid PatchBoardRequestDto requestBody,
+            @PathVariable("boardId") Long boardId,
+            @AuthenticationPrincipal String email
+    ) {
+        ResponseEntity<? super PatchBoardResponseDto> response = boardService.patchBoard(requestBody, boardId, email);
         return response;
     }
 
