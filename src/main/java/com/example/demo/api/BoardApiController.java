@@ -68,4 +68,13 @@ public class BoardApiController {
         ResponseEntity<? super PutFavoriteResponseDto> response = boardService.putFavorite(boardId, email);
         return response;
     }
+
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<? super DeleteBoardResponseDto> deleteBoard(
+            @PathVariable("boardId") Long boardId,
+            @AuthenticationPrincipal String email
+    ) {
+        ResponseEntity<? super DeleteBoardResponseDto> response = boardService.deleteBoard(boardId, email);
+        return response;
+    }
 }

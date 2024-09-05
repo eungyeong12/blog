@@ -15,6 +15,7 @@ import com.example.demo.repository.resultSet.GetCommentListResultSet;
 import com.example.demo.repository.resultSet.GetFavoriteListResultSet;
 import com.example.demo.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.sql.Delete;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -186,5 +187,35 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return PutFavoriteResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super DeleteBoardResponseDto> deleteBoard(Long boardId, String email) {
+
+        try {
+
+            boolean existedUser = userRepository.existsByEmail(email);
+            if(!existedUser) return DeleteBoardResponseDto.noExistUser();
+
+            Optional<Board> optionalBoard = boardRepository.findById(boardId);
+            Board board = optionalBoard.get();
+            if(board == null) return DeleteBoardResponseDto.noExistBoard();
+
+            String writerEmail = board.getWriterEmail();
+            boolean isWriter = writerEmail.equals(email);
+            if(!isWriter) return DeleteBoardResponseDto.noPermission();
+
+            imageRepository.deleteByBoardId(boardId);
+            commentRepository.deleteByBoardId(boardId);
+            favoriteRepository.deleteByBoardId(boardId);
+
+            boardRepository.delete(board);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return DeleteBoardResponseDto.success();
     }
 }
